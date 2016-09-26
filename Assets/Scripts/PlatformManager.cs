@@ -8,6 +8,7 @@ public class PlatformManager : MonoBehaviour
 {
     public static PlatformManager current;
     private GameObject platform;
+    private GameObject inactivePlat;
     public GameObject platUP;
     public GameObject platLEFT;
     public GameObject platRIGHT;
@@ -26,6 +27,8 @@ public class PlatformManager : MonoBehaviour
 
     private Direction[] OrientPlan;
     private Direction[] DirectPlan;
+    private Queue platformQueue;
+    private int activePlatformCount = 8;
 
     private float platformz;
     private float platformx;
@@ -72,35 +75,34 @@ public class PlatformManager : MonoBehaviour
             GetNextDirection();
             DirectPlan[i] = LastDirection;
         }
-         
-        //one inital platform
-            platform = ObjectPoolManager.Current.GetObject("up");
-            platform.transform.parent = transform;
-            platform.transform.localPosition = post;
-            platform.transform.localRotation = transform.rotation;
 
+        platformQueue = new Queue();
 
-        /////THIS IS UPDATE: once I get the collision trigger on the platforms figured out this will be in the update.
-        //currently all platform are created on start
-        while (var < platCount)
+        //initial platform
+        platform = ObjectPoolManager.Current.GetObject("up");
+        platform.transform.parent = transform;
+        platform.transform.localPosition = post;
+        platform.transform.localRotation = transform.rotation;
+        platformQueue.Enqueue(platform);
+
+        //initial 4 pieces
+        while (var < activePlatformCount/2 - 1)
         {
+            var++;
             post = PlatformLocation(post, OrientPlan[var]);
             platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
             platform.transform.parent = transform;
             platform.transform.localPosition = post;
             platform.transform.localRotation = transform.rotation;
-           platform.transform.Rotate(0, roat, 0);
-            var++;
+            platform.transform.Rotate(0, roat, 0);
+            platformQueue.Enqueue(platform);
         }
 
     }
 
     void Update() //this update will go into start
     {
-        //ISSUE: I had orginally moved the individual platforms when I only had one type and they were all contained in a pool created in this class 
-        //(No ObjectPoolManger or ObjectPool classes)
-        //The problem with moving the whole PlatformManager containing all my platforms is that even though the player is at (0,0,0)
-        //PlatFormManger will just keep moving which would (eventually) result in overflow
+
         if (Input.GetKey(KeyCode.DownArrow))
                        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z + speed * Time.deltaTime);
                   if (Input.GetKey(KeyCode.UpArrow)&&!stopdir[(int)Direction.up])
@@ -112,7 +114,27 @@ public class PlatformManager : MonoBehaviour
 
     }
 
+    //called by PlayerTrigger
+    public void triggerPlatform()
+    {
+        if (var < platCount)
+        {
+            var++;
+            post = PlatformLocation(post, OrientPlan[var]);
+            platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
+            platform.transform.parent = transform;
+            platform.transform.localPosition = post;
+            platform.transform.localRotation = transform.rotation;
+            platform.transform.Rotate(0, roat, 0);
+            platformQueue.Enqueue(platform);
+        }
+        if (platformQueue.Count >= activePlatformCount)
+        {
+            inactivePlat = (GameObject)platformQueue.Dequeue();
+            inactivePlat.GetComponent<PlatformClass>().DeactivatePlatform();
 
+        }
+    }
 
     private void GetNextDirection()
     {

@@ -9,10 +9,9 @@ public class PlatformClass : MonoBehaviour
     // Use this for initialization
     private GameObject player;
     public int amount; //amount of trees on the platform
-    public int Stage = 0; 
+
 void OnEnable()
     {
-        Stage = 0;
         player = GameObject.FindGameObjectWithTag("Player");
         Invoke("Spawn", 0.5f);
     }
@@ -37,11 +36,9 @@ void OnEnable()
         }
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public void DeactivatePlatform()
     {
-       if (Stage > 4) //once 4 platforms have been set active since this platfrom, then throw it back into the pool
-        {
             gameObject.SetActive(false);
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
@@ -50,26 +47,7 @@ void OnEnable()
                 obj.gameObject.SetActive(false);
 
             }
-        }
     }
-    //public void IncrementStage()
-    //{
-    //    Stage++;
-    //}
-
-    
-    //ISSUE WITH THESE TRIGGER FUNCTIONS (as in I don't know what I'm doing, so I'm just messing around)
-    void OnTriggerEnter(Collider col)
-    {
-        PlatformManager.current.SetPlatEnd(true);
-        Stage++;
-    }
-
-    void OnTriggerExit()
-    {
-        PlatformManager.current.SetPlatEnd(false);
-    }
-
 
 
 }
