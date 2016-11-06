@@ -82,7 +82,7 @@ public class PlatformManager : MonoBehaviour
         platform = ObjectPoolManager.Current.GetObject("up");
         platform.transform.parent = transform;
         platform.transform.localPosition = post;
-        platform.transform.localRotation = transform.rotation;
+        platform.GetComponent<PlatformClass>().Spawn();
         platformQueue.Enqueue(platform);
 
         //initial 4 pieces
@@ -93,28 +93,12 @@ public class PlatformManager : MonoBehaviour
             platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
             platform.transform.parent = transform;
             platform.transform.localPosition = post;
-            platform.transform.localRotation = transform.rotation;
             platform.transform.Rotate(0, roat, 0);
+            platform.GetComponent<PlatformClass>().Spawn();
             platformQueue.Enqueue(platform);
         }
 
     }
-
-    void Update() //this update will go into start
-    {
-
-        if (Input.GetKey(KeyCode.DownArrow))
-                       transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z + speed * Time.deltaTime);
-                  if (Input.GetKey(KeyCode.UpArrow)&&!stopdir[(int)Direction.up])
-                        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z - speed * Time.deltaTime);
-                  if (Input.GetKey(KeyCode.LeftArrow) && !stopdir[(int)Direction.left])
-                        transform.localPosition = new Vector3(transform.localPosition.x + 0.1f, transform.localPosition.y, transform.localPosition.z);
-                    if (Input.GetKey(KeyCode.RightArrow) && !stopdir[(int)Direction.right])
-                        transform.localPosition = new Vector3(transform.localPosition.x - 0.1f, transform.localPosition.y, transform.localPosition.z);
-
-    }
-
-    //called by PlayerTrigger
     public void triggerPlatform()
     {
         if (var < platCount)
@@ -124,8 +108,9 @@ public class PlatformManager : MonoBehaviour
             platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
             platform.transform.parent = transform;
             platform.transform.localPosition = post;
-            platform.transform.localRotation = transform.rotation;
+            platform.transform.localRotation = Quaternion.Euler(0, 0, 0);
             platform.transform.Rotate(0, roat, 0);
+            platform.GetComponent<PlatformClass>().Spawn();
             platformQueue.Enqueue(platform);
         }
         if (platformQueue.Count >= activePlatformCount)

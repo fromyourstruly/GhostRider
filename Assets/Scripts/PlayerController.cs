@@ -5,9 +5,8 @@ public class PlayerController : MonoBehaviour {
 
     GameObject translationNode;
     GameObject rotationNode;
-
     Quaternion rotation;
-
+    private bool treehit = false;
 	// Use this for initialization
 	void Start ()
     {
@@ -23,13 +22,13 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKey(KeyCode.A))
         {
             //For Left turn
-            rotation *= Quaternion.AngleAxis(0.2f, new Vector3(0,1,0));
+            rotation *= Quaternion.AngleAxis(0.5f, new Vector3(0,1,0));
             rotationNode.transform.rotation = rotation;
         }
         else if (Input.GetKey(KeyCode.D))
         {
             //For Right turn
-            rotation *= Quaternion.AngleAxis(-0.2f, new Vector3(0, 1, 0));
+            rotation *= Quaternion.AngleAxis(-0.5f, new Vector3(0, 1, 0));
             rotationNode.transform.rotation = rotation;
         }
 
@@ -37,14 +36,43 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKey(KeyCode.W))
         {
             //For acceleration
-            position.z -= 1.0f;
+            position.z -= 0.1f;
             translationNode.transform.position = position;
         }
         else if (Input.GetKey(KeyCode.S))
         {
             //For deceleration
-            position.z += 0.5f;
+            position.z += 0.05f;
             translationNode.transform.position = position; 
         }
 	}
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Tree")
+        {
+            treehit = true;
+            Vector3 diff = transform.InverseTransformPoint(col.gameObject.transform.position);
+            if (diff.z <= 1.0f && diff.z >= 0.3f)
+                PlatformManager.current.SetPlatformStopped(true, Direction.up);
+            if (diff.x <= 1.0f && diff.x > 0f)
+                PlatformManager.current.SetPlatformStopped(true, Direction.right);
+            if (diff.x >= -1.0f && diff.x <= 0f)
+                PlatformManager.current.SetPlatformStopped(true, Direction.left);
+        }
+        else
+        {
+            PlatformManager.current.triggerPlatform();
+        }
+    }
+
+    void OnTriggerExit()
+    {
+        if (treehit)
+        {
+            PlatformManager.current.SetPlatformStopped(false, Direction.up);
+            PlatformManager.current.SetPlatformStopped(false, Direction.right);
+            PlatformManager.current.SetPlatformStopped(false, Direction.left);
+            treehit = false;
+        }
+    }
 }

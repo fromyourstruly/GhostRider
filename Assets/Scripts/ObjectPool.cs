@@ -20,7 +20,6 @@ public class ObjectPool{
         {
             GameObject Nobj = GameObject.Instantiate(obj) as GameObject;
             obj.SetActive(false);
-            //obj.transform.parent = transform;
             pool.Add(Nobj);
         }
         this.amount = max;
