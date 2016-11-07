@@ -23,13 +23,14 @@ void OnEnable()
           int t = Random.Range(0, PlatformManager.current.trees.Length);
           GameObject tree = ObjectPoolManager.Current.GetObject(PlatformManager.current.trees[t].name);
             tree.transform.parent = transform;
-            Vector3 temp = new Vector3(Random.Range(-0.4f, 0.4f), 10, Random.Range(-0.4f, 0.4f));
+            // X location / Scale.x, Y location/ Scale.y,
+            Vector3 temp = new Vector3(Random.Range(-0.4f, 0.4f), 10f/100f, Random.Range(-0.4f, 0.4f));
             tree.transform.localPosition = temp;
-            while (Physics.CheckSphere(tree.transform.localPosition, 0.7f))
-            {
-                temp = new Vector3(Random.Range(-0.4f, 0.4f), 10, Random.Range(-0.4f, 0.4f));
-                tree.transform.localPosition = temp;
-            }
+            //while (Physics.CheckSphere(tree.transform.localPosition, 0.7f))
+            //{
+            //    temp = new Vector3(Random.Range(-0.4f, 0.4f), 10, Random.Range(-0.4f, 0.4f));
+            //    tree.transform.localPosition = temp;
+            //}
             tree.SetActive(true);
         }
     }

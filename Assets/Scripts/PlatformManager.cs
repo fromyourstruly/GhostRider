@@ -16,6 +16,8 @@ public class PlatformManager : MonoBehaviour
     public GameObject[] trees;
     private int treeCount = 50;
 
+    private int maxPlatNum = 15;
+    private int minPlatNum = 10;
     private int platCount;
     private int maxPlatNum = 15;
     private int minPlatNum = 10;
@@ -31,9 +33,9 @@ public class PlatformManager : MonoBehaviour
     private Queue platformQueue;
     private int activePlatformCount = 8;
 
-    private float Straightz;
-    private float Turnz;
-    private float Turnx;
+    private float straightz;
+    private float turnx;
+    private float turnz;
     private Direction Orientation;
     private Direction LastDirection;
 
@@ -48,10 +50,9 @@ public class PlatformManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
-        Straightz = platUP.transform.localScale.z; //if the platforms are square we only need one of these variables 
-        Turnz = platLEFT.transform.localScale.z - Straightz;
-        Turnx = platLEFT.transform.localScale.x;
+        straightz = platUP.GetComponent<Renderer>().bounds.size.z;
+        turnx = platLEFT.GetComponent<Renderer>().bounds.size.x;
+        turnz = platLEFT.GetComponent<Renderer>().bounds.size.z - straightz;
 
         post.y -= 1;
 
@@ -101,6 +102,7 @@ public class PlatformManager : MonoBehaviour
         }
 
     }
+
     public void triggerPlatform()
     {
         if (var < platCount)
@@ -169,24 +171,24 @@ public class PlatformManager : MonoBehaviour
     {
         if (orient == Direction.up)
         {
-            pos.z += Straightz;        
+            pos.z += straightz;        
             roat = 0;
         }
         else if (orient == Direction.down)
         {
-            pos.z -= Straightz;           
+            pos.z -= straightz;           
             roat = 180;
         }
         else if (orient == Direction.right)
         {
-            pos.x += Turnx;
-            pos.z += Turnz;
+            pos.x += turnx;
+            pos.z += turnz;        
             roat = 90;
         }
         else if (orient == Direction.left)
         {
-            pos.x -= Turnx;
-            pos.z += Turnz;
+            pos.x -= turnx;
+            pos.z += turnz;
             roat = -90;
         }
             return pos;
