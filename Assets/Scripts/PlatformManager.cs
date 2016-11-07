@@ -17,9 +17,10 @@ public class PlatformManager : MonoBehaviour
     private int treeCount = 50;
 
     private int platCount;
+    private int maxPlatNum = 15;
+    private int minPlatNum = 10;
     private int var = 0;
-   // List<GameObject> pool;
-    //private int initialamt = 3; 
+
     public float speed;
     private bool[] stopdir = new bool[] { false, false, false };
     private bool platEnd = false;
@@ -30,12 +31,12 @@ public class PlatformManager : MonoBehaviour
     private Queue platformQueue;
     private int activePlatformCount = 8;
 
-    private float platformz;
-    private float platformx;
+    private float Straightz;
+    private float Turnz;
+    private float Turnx;
     private Direction Orientation;
     private Direction LastDirection;
-    private int maxPlatNum = 15;
-    private int minPlatNum = 10;
+
     private Vector3 post = new Vector3(0, 0, 0); //basically the dummy position vector of for the current platform
     private float roat = 0; //how much to rotate the platform by such that the collider will always be turned to the end of the platform, connecting to the next one
 
@@ -48,8 +49,9 @@ public class PlatformManager : MonoBehaviour
     void Start()
     {
 
-        platformz = platUP.transform.localScale.z; //if the platforms are square we only need one of these variables 
-        platformx = platUP.transform.localScale.x;
+        Straightz = platUP.transform.localScale.z; //if the platforms are square we only need one of these variables 
+        Turnz = platLEFT.transform.localScale.z - Straightz;
+        Turnx = platLEFT.transform.localScale.x;
 
         post.y -= 1;
 
@@ -167,22 +169,24 @@ public class PlatformManager : MonoBehaviour
     {
         if (orient == Direction.up)
         {
-            pos.z += platformz;        
+            pos.z += Straightz;        
             roat = 0;
         }
         else if (orient == Direction.down)
         {
-            pos.z -= platformz;           
+            pos.z -= Straightz;           
             roat = 180;
         }
         else if (orient == Direction.right)
         {
-            pos.x += platformx;          
+            pos.x += Turnx;
+            pos.z += Turnz;
             roat = 90;
         }
         else if (orient == Direction.left)
         {
-            pos.x -= platformx;            
+            pos.x -= Turnx;
+            pos.z += Turnz;
             roat = -90;
         }
             return pos;

@@ -68,11 +68,6 @@ public class PlayerController : MonoBehaviour {
     void OnTriggerExit()
     {
         if (treehit)
-        {
-            PlatformManager.current.SetPlatformStopped(false, Direction.up);
-            PlatformManager.current.SetPlatformStopped(false, Direction.right);
-            PlatformManager.current.SetPlatformStopped(false, Direction.left);
             treehit = false;
-        }
     }
 }
