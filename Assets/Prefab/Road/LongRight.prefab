@@ -37,7 +37,7 @@ Transform:
   m_GameObject: {fileID: 1000012600339132}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
@@ -55,7 +55,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: b7cb9b32ef445df45870077cd114157f, type: 2}
+  - {fileID: 2100000, guid: 93916075456ba1940b2319c2b8b8b53d, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -77,7 +77,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012600339132}
-  m_Mesh: {fileID: 4300000, guid: e9aba79629f4e6c48bb0734400f54df2, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 94a905bf16532094498dd5d0c1a995df, type: 3}
 --- !u!65 &65000011927301172
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -88,5 +88,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.005, y: 0.009, z: 0.02}
-  m_Center: {x: 0.0275, y: 0.003, z: 0.02}
+  m_Size: {x: 0.5, y: 1, z: 2}
+  m_Center: {x: 2.75, y: 0.5, z: 2}
