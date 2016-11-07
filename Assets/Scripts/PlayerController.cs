@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour {
 
     GameObject translationNode;
     GameObject rotationNode;
-
+    private bool treehit = false;
     Quaternion rotation;
 
 	// Use this for initialization
@@ -23,13 +23,13 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKey(KeyCode.A))
         {
             //For Left turn
-            rotation *= Quaternion.AngleAxis(0.5f, new Vector3(0,1,0));
+            rotation *= Quaternion.AngleAxis(1.0f, new Vector3(0,1,0));
             rotationNode.transform.rotation = rotation;
         }
         else if (Input.GetKey(KeyCode.D))
         {
             //For Right turn
-            rotation *= Quaternion.AngleAxis(-0.5f, new Vector3(0, 1, 0));
+            rotation *= Quaternion.AngleAxis(-1.0f, new Vector3(0, 1, 0));
             rotationNode.transform.rotation = rotation;
         }
 
@@ -43,8 +43,33 @@ public class PlayerController : MonoBehaviour {
         else if (Input.GetKey(KeyCode.S))
         {
             //For deceleration
-            position.z += 0.2f;
+            position.z += 0.1f;
             translationNode.transform.position = position; 
         }
 	}
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Tree")
+        {
+            treehit = true;
+            Vector3 diff = transform.InverseTransformPoint(col.gameObject.transform.position);
+            if (diff.z <= 1.0f && diff.z >= 0.3f)
+                PlatformManager.current.SetPlatformStopped(true, Direction.up);
+            if (diff.x <= 1.0f && diff.x > 0f)
+                PlatformManager.current.SetPlatformStopped(true, Direction.right);
+            if (diff.x >= -1.0f && diff.x <= 0f)
+                PlatformManager.current.SetPlatformStopped(true, Direction.left);
+        }
+        else
+        {
+            PlatformManager.current.triggerPlatform();
+        }
+    }
+
+    void OnTriggerExit()
+    {
+        if (treehit)
+            treehit = false;
+    }
 }
