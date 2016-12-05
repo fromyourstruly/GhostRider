@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour {
     GameObject rotationNode;
     private bool treehit = false;
     Quaternion rotation;
-    private bool treehit = false;
 	// Use this for initialization
 	void Start ()
     {

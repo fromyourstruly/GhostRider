@@ -16,17 +16,15 @@ public class PlatformManager : MonoBehaviour
     public GameObject[] trees;
     private int treeCount = 50;
 
-    private int maxPlatNum = 15;
-    private int minPlatNum = 10;
+    private int maxPlatNum = 25;
+    private int minPlatNum = 20;
     private int platCount;
-    private int maxPlatNum = 15;
-    private int minPlatNum = 10;
     private int var = 0;
 
     public float speed;
     private bool[] stopdir = new bool[] { false, false, false };
     private bool platEnd = false;
-    private int[] DirArray = new int [] { 1 , 1,1 };
+    private int[] DirArray = new int [] {1, 1, 1};
 
     private Direction[] OrientPlan;
     private Direction[] DirectPlan;
@@ -34,6 +32,7 @@ public class PlatformManager : MonoBehaviour
     private int activePlatformCount = 8;
 
     private float straightz;
+    private float straightx;
     private float turnx;
     private float turnz;
     private Direction Orientation;
@@ -51,10 +50,11 @@ public class PlatformManager : MonoBehaviour
     void Start()
     {
         straightz = platUP.GetComponent<Renderer>().bounds.size.z;
+        straightx = platUP.GetComponent<Renderer>().bounds.size.x;
         turnx = platLEFT.GetComponent<Renderer>().bounds.size.x;
         turnz = platLEFT.GetComponent<Renderer>().bounds.size.z - straightz;
 
-        post.y -= 1;
+       // post.y -= 1;
 
         ObjectPoolManager.Current.CreatePool(platUP, 25);
         ObjectPoolManager.Current.CreatePool(platLEFT, 10);
@@ -71,12 +71,15 @@ public class PlatformManager : MonoBehaviour
         platCount = UnityEngine.Random.Range(minPlatNum, maxPlatNum);
         OrientPlan = new Direction[platCount];
         DirectPlan = new Direction[platCount];
+        OrientPlan[0] = Orientation;
+        DirectPlan[0] = LastDirection;
 
-        for (int i = 0; i < platCount; i++)
+        for (int i = 1; i < platCount; i++)
         {
             OrientPlan[i] = Orientation;
             GetNextDirection();
             DirectPlan[i] = LastDirection;
+ //         Debug.Log(DirectPlan[i]);
         }
 
         platformQueue = new Queue();
@@ -92,7 +95,7 @@ public class PlatformManager : MonoBehaviour
         while (var < activePlatformCount/2 - 1)
         {
             var++;
-            post = PlatformLocation(post, OrientPlan[var]);
+            post = PlatformLocation(post, var);
             platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
             platform.transform.parent = transform;
             platform.transform.localPosition = post;
@@ -108,7 +111,7 @@ public class PlatformManager : MonoBehaviour
         if (var < platCount)
         {
             var++;
-            post = PlatformLocation(post, OrientPlan[var]);
+            post = PlatformLocation(post, var);
             platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
             platform.transform.parent = transform;
             platform.transform.localPosition = post;
@@ -167,32 +170,67 @@ public class PlatformManager : MonoBehaviour
 
 
 
-    private Vector3 PlatformLocation(Vector3 pos, Direction orient)
+    private Vector3 PlatformLocation(Vector3 pos, int orient)
     {
-        if (orient == Direction.up)
+        if (OrientPlan[orient] == Direction.up)
         {
-            pos.z += straightz;        
             roat = 0;
+            if (orient > 1 && OrientPlan[orient] != OrientPlan[orient - 1])
+            {
+                pos.z += turnx;
+                if (OrientPlan[orient - 1] == Direction.left)
+                    pos.x -= turnz;
+                else
+                    pos.x += turnz;
+            }
+            else
+                pos.z += straightz;
         }
-        else if (orient == Direction.down)
+        else if (OrientPlan[orient] == Direction.down)
         {
-            pos.z -= straightz;           
             roat = 180;
+            if (orient > 1 && OrientPlan[orient] != OrientPlan[orient - 1])
+            {
+                pos.z -= turnx;
+                if (OrientPlan[orient - 1] == Direction.left)
+                    pos.x -= turnz;
+                else
+                    pos.x += turnz;
+            }
+            else
+                pos.z -= straightz;
         }
-        else if (orient == Direction.right)
+        else if (OrientPlan[orient] == Direction.right)
         {
-            pos.x += turnx;
-            pos.z += turnz;        
+            
             roat = 90;
+            if (orient > 1 && OrientPlan[orient] != OrientPlan[orient - 1])
+            {
+                pos.x += turnx;
+                if (OrientPlan[orient - 1] == Direction.up)
+                    pos.z += turnz;
+                else
+                    pos.z -= turnz;
+            }
+            else
+                pos.x += straightx;
         }
-        else if (orient == Direction.left)
+        else if (OrientPlan[orient] == Direction.left)
         {
-            pos.x -= turnx;
-            pos.z += turnz;
             roat = -90;
+            if (orient > 1 && OrientPlan[orient] != OrientPlan[orient - 1])
+            {
+                pos.x -= turnx;
+                if (OrientPlan[orient - 1] == Direction.up)
+                    pos.z += turnz;
+                else
+                    pos.z -= turnz;
+            }
+            else
+                pos.x -= straightx;
         }
-            return pos;
-        }
+        return pos;
+    }
 
 
     //ISSUE: part of the platform collider issue. 
