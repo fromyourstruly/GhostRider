@@ -13,7 +13,6 @@ public class PlatformClass : MonoBehaviour
 void OnEnable()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        //Spawn();
     }
 
     public void Spawn()
@@ -24,7 +23,7 @@ void OnEnable()
           GameObject tree = ObjectPoolManager.Current.GetObject(PlatformManager.current.trees[t].name);
             tree.transform.parent = transform;
             // X location / Scale.x, Y location/ Scale.y,
-            Vector3 temp = new Vector3(Random.Range(-0.4f, 0.4f), 10f/100f, Random.Range(-0.4f, 0.4f));
+            Vector3 temp = new Vector3(Random.Range(-0.9f, 0.9f), 1f, Random.Range(-0.9f, 0.9f));
             tree.transform.localPosition = temp;
             //while (Physics.CheckSphere(tree.transform.localPosition, 0.7f))
             //{

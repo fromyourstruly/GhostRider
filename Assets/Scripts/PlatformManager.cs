@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum Direction { left, right, up, down };
+public enum Direction {up, left, right, down };
 
 public class PlatformManager : MonoBehaviour
 {
@@ -14,10 +14,9 @@ public class PlatformManager : MonoBehaviour
     public GameObject platRIGHT;
 
     public GameObject[] trees;
-    private int treeCount = 50;
 
-    private int maxPlatNum = 25;
-    private int minPlatNum = 20;
+    public int turnvariable;
+    public int maxPlatNum;
     private int platCount;
     private int var = 0;
 
@@ -25,11 +24,13 @@ public class PlatformManager : MonoBehaviour
     private bool[] stopdir = new bool[] { false, false, false };
     private bool platEnd = false;
     private int[] DirArray = new int [] {1, 1, 1};
+    private int[] DirProbability = new int[20];
 
     private Direction[] OrientPlan;
     private Direction[] DirectPlan;
     private Queue platformQueue;
     private int activePlatformCount = 8;
+    private int treeCount = 3;
 
     private float straightz;
     private float straightx;
@@ -56,19 +57,16 @@ public class PlatformManager : MonoBehaviour
 
        // post.y -= 1;
 
-        ObjectPoolManager.Current.CreatePool(platUP, 25);
-        ObjectPoolManager.Current.CreatePool(platLEFT, 10);
-        ObjectPoolManager.Current.CreatePool(platRIGHT, 10);
-
         for(int i = 0; i < trees.Length; i++)
         {
-            ObjectPoolManager.Current.CreatePool(trees[i], treeCount);
+            ObjectPoolManager.Current.CreatePool(trees[i], (activePlatformCount + 2) * treeCount);
         }
 
         LastDirection = Direction.up;
         Orientation = Direction.up;
 
-        platCount = UnityEngine.Random.Range(minPlatNum, maxPlatNum);
+        platCount = UnityEngine.Random.Range((maxPlatNum-(maxPlatNum/5)), maxPlatNum);
+        SetPool();
         OrientPlan = new Direction[platCount];
         DirectPlan = new Direction[platCount];
         OrientPlan[0] = Orientation;
@@ -85,16 +83,15 @@ public class PlatformManager : MonoBehaviour
         platformQueue = new Queue();
 
         //initial platform
-        platform = ObjectPoolManager.Current.GetObject("up");
-        platform.transform.parent = transform;
-        platform.transform.localPosition = post;
-        platform.GetComponent<PlatformClass>().Spawn();
-        platformQueue.Enqueue(platform);
+     //   platform = ObjectPoolManager.Current.GetObject("up");
+    //    platform.transform.parent = transform;
+     //   platform.transform.localPosition = post;
+     //   platform.GetComponent<PlatformClass>().Spawn();
+     //   platformQueue.Enqueue(platform);
 
         //initial 4 pieces
-        while (var < activePlatformCount/2 - 1)
+        while (var < activePlatformCount/2)
         {
-            var++;
             post = PlatformLocation(post, var);
             platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
             platform.transform.parent = transform;
@@ -102,6 +99,7 @@ public class PlatformManager : MonoBehaviour
             platform.transform.Rotate(0, roat, 0);
             platform.GetComponent<PlatformClass>().Spawn();
             platformQueue.Enqueue(platform);
+            var++;
         }
 
     }
@@ -110,7 +108,6 @@ public class PlatformManager : MonoBehaviour
     {
         if (var < platCount)
         {
-            var++;
             post = PlatformLocation(post, var);
             platform = ObjectPoolManager.Current.GetObject(DirectPlan[var].ToString());
             platform.transform.parent = transform;
@@ -119,6 +116,7 @@ public class PlatformManager : MonoBehaviour
             platform.transform.Rotate(0, roat, 0);
             platform.GetComponent<PlatformClass>().Spawn();
             platformQueue.Enqueue(platform);
+            var++;
         }
         if (platformQueue.Count >= activePlatformCount)
         {
@@ -128,12 +126,36 @@ public class PlatformManager : MonoBehaviour
         }
     }
 
+    private void SetPool()
+    {
+        if (turnvariable < 0 || turnvariable > 5)
+            Debug.LogError("turn variable must be between 0 and 5, inclusive");
+        if(turnvariable == 0) 
+            ObjectPoolManager.Current.CreatePool(platUP, activePlatformCount + 2);
+        else
+        {
+            ObjectPoolManager.Current.CreatePool(platUP, (activePlatformCount * (1-(turnvariable)/10)) + 2);
+            ObjectPoolManager.Current.CreatePool(platLEFT, (activePlatformCount * (turnvariable / 20)) + 2);
+            ObjectPoolManager.Current.CreatePool(platRIGHT, (activePlatformCount * (turnvariable / 20)) + 2);
+            for (int i = 0; i < (turnvariable * 2); i++)
+            {
+                if (i < turnvariable)
+                    DirProbability[i] = 1;
+                else
+                    DirProbability[i] = 2;
+            }
+
+            
+        }
+    }
+
+
     private void GetNextDirection()
     {
         int dir;
         do
         {
-            dir = Random.Range(0, 3);
+            dir = DirProbability[Random.Range(0, 20)];
         } while (DirArray[dir] != 1);
         if ((int)LastDirection != dir && LastDirection != Direction.up)
             DirArray[(int)LastDirection] += 1;

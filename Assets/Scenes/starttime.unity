@@ -200,7 +200,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 227295149}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -224,6 +224,8 @@ MonoBehaviour:
   - {fileID: 102882, guid: 62b9d59fd42a7bd43a26d4459c785c77, type: 2}
   - {fileID: 151624, guid: 27f0e85d14cd6f641a93a3d9771b17a9, type: 2}
   - {fileID: 197322, guid: 9b5f1b999d81b1548860518ff463b60f, type: 2}
+  turnvariable: 2
+  maxPlatNum: 50
   speed: 5
 --- !u!1 &569130705
 GameObject:
@@ -381,6 +383,8 @@ MonoBehaviour:
   - {fileID: 102882, guid: 62b9d59fd42a7bd43a26d4459c785c77, type: 2}
   - {fileID: 151624, guid: 27f0e85d14cd6f641a93a3d9771b17a9, type: 2}
   - {fileID: 197322, guid: 9b5f1b999d81b1548860518ff463b60f, type: 2}
+  turnvariable: 4
+  maxPlatNum: 25
   speed: 5
 --- !u!1 &1645112813
 GameObject:
