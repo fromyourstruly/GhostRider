@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
     GameObject translationNode;
     GameObject rotationNode;
     private bool treehit = false;
+//	private Direction stopdir;
     Quaternion rotation;
 	// Use this for initialization
 	void Start ()
@@ -19,13 +20,13 @@ public class PlayerController : MonoBehaviour {
 	void Update ()
     {
         rotation = rotationNode.transform.rotation;
-        if (Input.GetKey(KeyCode.A))
+		if (Input.GetKey(KeyCode.A))
         {
             //For Left turn
             rotation *= Quaternion.AngleAxis(1.0f, new Vector3(0,1,0));
             rotationNode.transform.rotation = rotation;
         }
-        else if (Input.GetKey(KeyCode.D))
+		else if (Input.GetKey(KeyCode.D))
         {
             //For Right turn
             rotation *= Quaternion.AngleAxis(-1.0f, new Vector3(0, 1, 0));
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         Vector3 position = translationNode.transform.position;
-        if (Input.GetKey(KeyCode.W))
+		if (Input.GetKey(KeyCode.W) && !treehit)
         {
             //For acceleration
             position.z -= 0.2f;
@@ -52,13 +53,13 @@ public class PlayerController : MonoBehaviour {
         if (col.gameObject.tag == "Tree")
         {
             treehit = true;
-            Vector3 diff = transform.InverseTransformPoint(col.gameObject.transform.position);
-            if (diff.z <= 1.0f && diff.z >= 0.3f)
-                PlatformManager.current.SetPlatformStopped(true, Direction.up);
-            if (diff.x <= 1.0f && diff.x > 0f)
-                PlatformManager.current.SetPlatformStopped(true, Direction.right);
-            if (diff.x >= -1.0f && diff.x <= 0f)
-                PlatformManager.current.SetPlatformStopped(true, Direction.left);
+            //Vector3 diff = transform.InverseTransformPoint(col.gameObject.transform.position);
+			//if (diff.z <= 1.0f && diff.z >= 0.3f)
+			//	stopdir = Direction.up;
+			//if (diff.x <= 1.0f && diff.x > 0f)
+			//	stopdir = Direction.right;
+			//if (diff.x >= -1.0f && diff.x <= 0f)
+			//	stopdir = Direction.left;;
         }
         else
         {
