@@ -2,3 +2,9 @@ Library/
 Temp/
 Thumbs.db
 Thumbs.db.*
+Assembly-CSharp.csproj
+Unity .sln
+Unity .userprefs
+obj/Debug/Assembly-CSharp.csproj.FilesWrittenAbsolute.txt
+obj/Debug/Assembly-CSharp.dll
+obj/Debug/Assembly-CSharp.dll.mdb
