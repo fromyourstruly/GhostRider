@@ -8,3 +8,5 @@ Unity .userprefs
 obj/Debug/Assembly-CSharp.csproj.FilesWrittenAbsolute.txt
 obj/Debug/Assembly-CSharp.dll
 obj/Debug/Assembly-CSharp.dll.mdb
+GhostRider.CSharp.csproj
+GhostRider.sln
