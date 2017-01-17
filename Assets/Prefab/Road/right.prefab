@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114000010567635712}
   m_Layer: 0
   m_Name: right
-  m_TagString: Untagged
+  m_TagString: Road
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -797,7 +797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c978a3641ff19ea489ccdb651e4cb1a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 3
+  amount: 5
 --- !u!135 &135042249654811406
 SphereCollider:
   m_ObjectHideFlags: 1

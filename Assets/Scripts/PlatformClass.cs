@@ -21,10 +21,10 @@ void OnEnable()
 
     public void Spawn()
     {
-		int[] nodes = new int[childCount];
+        int[] nodes = new int[childCount];
+
         for (int i = 0; i < amount; i++)
-        {
-			
+        {	
           int t = Random.Range(0, PlatformManager.current.trees.Length);
           GameObject tree = ObjectPoolManager.Current.GetObject(PlatformManager.current.trees[t].name);
             tree.transform.parent = transform;
@@ -33,20 +33,27 @@ void OnEnable()
 					childnum = Random.Range (0, childCount);
 				} while(nodes [childnum] == 1);
 				tree.transform.localPosition = transform.GetChild (childnum).transform.localPosition;
-				nodes [childnum] = 1;
-				
+				nodes [childnum] = 1;				
 			} else {
-				// X location / Scale.x, Y location/ Scale.y,
-				do {
-					Vector3 temp = new Vector3 (Random.Range (-0.9f, 0.9f), 1f, Random.Range (-0.9f, 0.9f));
+                // X location / Scale.x, Y location/ Scale.y,
+                int hit;
+                do {
+                    hit = 0;
+                    Vector3 temp = new Vector3 (Random.Range (0.7f, 0.9f) * (Random.Range(0,2) *2 -1), 1f, Random.Range (-0.9f, 0.9f));
 					tree.transform.localPosition = temp;
-				} while (Physics.CheckSphere (tree.transform.localPosition, 0.3f));
-			}
-//            //while (Physics.CheckSphere(tree.transform.localPosition, 0.7f))
-//            //{
-//            //    temp = new Vector3(Random.Range(-0.4f, 0.4f), 10, Random.Range(-0.4f, 0.4f));
-//            //    tree.transform.localPosition = temp;
-//            //}
+                    Collider[] hits = Physics.OverlapSphere(tree.transform.position, 1f);
+                    for (int j = 0; j < hits.Length; j++)
+                    {
+                        if (hits[j].gameObject.tag == "Tree")
+                            hit++;
+                    }
+                } while (hit > 1);
+            }
+            //            //while (Physics.CheckSphere(tree.transform.localPosition, 0.7f))
+            //            //{
+            //            //    temp = new Vector3(Random.Range(-0.4f, 0.4f), 10, Random.Range(-0.4f, 0.4f));
+            //            //    tree.transform.localPosition = temp;
+            //            //}
             tree.SetActive(true);
         }
     }
